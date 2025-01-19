@@ -7,6 +7,8 @@ from flask_login import UserMixin
 # Users Table 
 class User(db.Model, UserMixin):
     #user model will store users and their info
+    __tablename__ = 'users'
+
     id = db.Column(db.integer, primary_key=True)
     username = db.column(db.string(100), nullable=False, unique=True)
     gender = db.column(db.string(20), nullable=True)
@@ -20,4 +22,20 @@ class User(db.Model, UserMixin):
 #checking if the typed password is in alignment with the hashed password 
     def check_password(self, password):
         return Bcrypt.check_password_hash(self.password_hash, password)
+    
+
+class MuscleGroup(db.Model):
+    # defining the muscle Groups 
+    __tablename__ = 'muscleGroup'
+
+
+    muscle_group_id = db.Column(db.integer, primary_key=True)
+    name = db.Column(db.string(100), nullable=False)
+    description = db.Column(db.string(255), nullable=True)
+
+    #Relationships 
+
+    exercises = db.relationship('Exercise', backref='muscle_group', lazy=True)
+
+
     
