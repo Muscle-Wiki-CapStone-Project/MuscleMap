@@ -53,4 +53,32 @@ class MuscleGroup(db.Model):
         favorites = db.relationship('UsersFavorites', backref='exercise', lazy=True)
         workout_plans = db.relationship('WorkoutPlanDetails', backref='exercise', lazy=True)
 
-    
+    class UserFavorites(db.Model):
+        # Model for a users Fav exercise
+
+        __tablename__ = 'users_favorites'
+
+        favorite_id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('users_id', nullable=False))
+        exercise_id = db.Column(db.Integer, db.ForeignKey('exercise.exercise_id'), nullable=False)
+
+    class UserWorkouts(db.Model):
+        # Models for the users workout plan (group of favorite workouts that have been added to a routine "ex. pull-day, push-day, leg day, etc.")
+        __tablename__ = 'userWorkouts'
+
+        plan_id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+        plan_name = db.Column(db.String(100), nullable=False)
+        created_at= db.Column(db.DateTime,  nullable=False)
+
+        #Relationship
+
+        details = db.relationship('WorkoutPlanDetails', backref='workout_plan', lazy=True)
+
+    class WorkoutPlanDetails(db.Model):
+        # Model for workout plan details, essentially im linking the exercises to the plans 
+        __tablename__ = 'workoutPlanDetails'
+
+        plan_detail_id = db.Column(db.Integer, primary_key=True)
+        plan_id = db.Column(db.Integer, db.ForeignKey('userWorkouts.Plan_id'), nullable=False)
+        exercise_id = db.Column(db.Integer, db.ForeignKey('exercise.exercise_id'), nullable=False)
