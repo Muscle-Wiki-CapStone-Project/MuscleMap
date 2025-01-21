@@ -7,16 +7,20 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from extensions import db, bcrypt  # Import extensions
+from extensions import db, bcrypt 
 from config import Config
-from models import User  # Import models after db initialization
-from routes import auth_bp  # Import Blueprint after app is created
+from models import User  
+from routes import auth_bp  
+from flask_cors import CORS
+
+
 
 # Initialize the Flask app
 app = Flask(__name__)
 app.config.from_object(Config)
 
 # Initialize extensions
+CORS(app)
 db.init_app(app)
 bcrypt.init_app(app)
 migrate = Migrate(app, db)

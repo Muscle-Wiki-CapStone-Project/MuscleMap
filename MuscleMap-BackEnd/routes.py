@@ -8,24 +8,30 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
+    data = request.get_json() 
     username = data.get('username')
-    gender = data.get('gender')
     password = data.get('password')
+    gender = data.get('gender')  
 
-    if not username or not password:
-        return jsonify({'message': 'Username and password are required!'}), 400
+    # Check if the username already exists
+    if User.query.filter_by(username=username).first():
+        return jsonify({"error": "Username already exists"}), 400
 
-    existing_user = User.query.filter_by(username=username).first()
-    if existing_user:
-        return jsonify({'message': 'Username already exists!'}), 409
+    # Check gender 
+    valid_genders = ['Male', 'Female', 'Other']
+    if gender not in valid_genders:
+        return jsonify({"error": f"Invalid gender. Must be one of {valid_genders}"}), 400
 
-    user = User(username=username, gender=gender)
-    user.set_password(password)
+    # Create the new user
+    new_user = User(username=username, gender=gender)
+    new_user.set_password(password)
 
-    db.session.add(user)
+    # Add to the database
+    db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User registered successfully!'}), 201
+
+    return jsonify({"message": "User registered successfully"}), 201
+
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
