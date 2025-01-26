@@ -27,7 +27,7 @@ def create_app():
     login_manager.login_view = "auth.login"
 
     # Enable CORS for all routes
-    CORS(app)
+    CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 
     # Register blueprints
     with app.app_context():

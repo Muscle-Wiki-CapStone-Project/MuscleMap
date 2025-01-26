@@ -1,3 +1,5 @@
+const BACKEND_URL = 'http://127.0.0.1:5000';
+
 const basicFetchOptions = {
     method: 'GET',
     credentials: 'include',
@@ -24,7 +26,7 @@ export const getPatchOptions = (body) => ({
 
 export const fetchHandler = async (url, options = {}) => {
     try {
-        const response = await fetch(url, options);
+        const response = await fetch(`${BACKEND_URL}${url}`, options); // connect with the backend URL 
         const { ok, status, headers } = response;
         if (!ok) throw new Error(`Fetch failed with status - ${status}`, { cause: status });
 
@@ -37,4 +39,3 @@ export const fetchHandler = async (url, options = {}) => {
         return [null, error];
     }
 };
-

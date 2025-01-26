@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fetchHandler, getPostOptions } from '../utils/fetchingUtils';
+import { getPostOptions, fetchHandler } from '../utils/fetchingUtils';
 
 const UserSignUp = () => {
     const [username, setUsername] = useState('');
@@ -13,12 +13,12 @@ const UserSignUp = () => {
 
         const body = { username, password, gender };
 
-        const [response, err] = await fetchHandler('/api/register', getPostOptions(body));
+        const [data, err] = await fetchHandler('/api/register', getPostOptions(body));
 
         if (err) {
             setError('An error occurred during registration.');
         } else {
-            setMessage(response.message);
+            setMessage(data.message);
         }
     };
 
