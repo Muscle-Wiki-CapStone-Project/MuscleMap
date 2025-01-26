@@ -54,6 +54,9 @@ def create_app():
     @app.route('/', methods=['GET'])
     def api_home():
         return "Welcome to MuscleMap API!"
+    
+    print("Database URI:", app.config['SQLALCHEMY_DATABASE_URI'])
+
 
 
     return app
