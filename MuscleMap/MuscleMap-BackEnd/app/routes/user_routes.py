@@ -8,11 +8,14 @@ from app.initialization import db, bcrypt
 
 user_bp = Blueprint('users', __name__)
 
-@user_bp.route('/me', methods=['GET'])
+@user_bp.route('/profile', methods=['GET'])
 @login_required
 def get_current_user():
-    return jsonify({
-        'id': current_user.id,
-        'username': current_user.username,
-        'gender': current_user.gender,
-    })
+    print(f"Current user: {current_user}")
+    if current_user.is_authenticated:
+        return jsonify({
+            'id': current_user.id,
+            'username': current_user.username,
+            'gender': current_user.gender,
+        })
+    return jsonify({'error': 'Unauthorized'}), 401

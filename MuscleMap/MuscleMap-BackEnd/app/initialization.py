@@ -6,13 +6,14 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_cors import CORS
 from app.config import Config
+from dotenv import load_dotenv
 
 # Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-
+load_dotenv()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -24,7 +25,8 @@ def create_app():
     login_manager.init_app(app)
 
 
-    login_manager.login_view = "auth.login"
+    login_manager.login_view = 'auth.login'
+    # login_manager.login_message = None
 
     # Enable CORS for all routes
     CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:5173"}})

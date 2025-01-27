@@ -26,16 +26,17 @@ export const getPatchOptions = (body) => ({
 
 export const fetchHandler = async (url, options = {}) => {
     try {
-        const response = await fetch(`${BACKEND_URL}${url}`, options); // connect with the backend URL 
+        const response = await fetch(`http://127.0.0.1:5000${url}`, {
+            ...options,
+            credentials: 'include',
+        });
         const { ok, status, headers } = response;
-        if (!ok) throw new Error(`Fetch failed with status - ${status}`, { cause: status });
-
+        if (!ok) throw new Error(`Fetch failed with status - ${status}`);
         const isJson = (headers.get('content-type') || '').includes('application/json');
         const responseData = await (isJson ? response.json() : response.text());
-
         return [responseData, null];
     } catch (error) {
-        console.warn(error);
+        console.warn('Error in fetchHandler:', error);
         return [null, error];
     }
 };
