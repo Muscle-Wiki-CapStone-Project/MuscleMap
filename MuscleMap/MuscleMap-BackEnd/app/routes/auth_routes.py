@@ -7,8 +7,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/register', methods=['POST'])
-def register():
+@auth_bp.route('/signup', methods=['POST'])
+def signup():
     data = request.json
     username = data.get('username')
     password = data.get('password')

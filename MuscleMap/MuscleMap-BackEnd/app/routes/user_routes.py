@@ -1,6 +1,4 @@
 # user related actions 
-
-
 from flask import Blueprint, jsonify
 from flask_login import login_required, current_user
 from app.initialization import db, bcrypt

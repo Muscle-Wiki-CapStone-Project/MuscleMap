@@ -41,8 +41,8 @@ def create_app():
 
         app.register_blueprint(auth_bp, url_prefix='/api')
         app.register_blueprint(user_bp, url_prefix='/api')
-        app.register_blueprint(workout_bp, url_prefix='/api')
         app.register_blueprint(exercise_bp, url_prefix='/api')
+        app.register_blueprint(workout_bp, url_prefix='/api')
         app.register_blueprint(muscle_group_bp, url_prefix='/api')
 
         # Import models

@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./MuscleMap/MuscleMap-BackEnd",
+        "./MuscleMap/MuscleMap-BackEnd"
+    ]
+}
