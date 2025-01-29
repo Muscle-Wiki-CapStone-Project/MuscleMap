@@ -40,3 +40,20 @@ export const fetchHandler = async (url, options = {}) => {
         return [null, error];
     }
 };
+
+export const fetchExercises = async (muscle) => {
+    // Fetch exercises for specific muscle group from backend API
+    const [data, error] = await fetchHandler(`/api/exercises/${muscle}`);
+    if (error) {
+        console.error(`Error fetching exercises for ${muscle}:`, error);
+    }
+    return [data, error];
+};
+
+export const fetchAndStoreExercises = async (muscle) => {
+    const [data, error] = await fetchHandler(`/api/exercises/fetch/${muscle}`);
+    if (error) {
+        console.error(`Error fetching and storing exercises for ${muscle}:`, error);
+    }
+    return [data, error];
+};

@@ -32,34 +32,30 @@ class User(db.Model, UserMixin):
 class MuscleGroup(db.Model):
 
     # Represents a muscle group (e.g., chest, back, legs).
-
     __tablename__ = 'muscle_groups'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)  # Muscle name (e.g., biceps, lats)
 
-    # Relationships
-    exercises = db.relationship('Exercise', backref='muscle_group', lazy=True)
-
+    # Foreign Keys
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'), nullable=False)
 
 # Exercise Table
 class Exercise(db.Model):
-    
-    # Represents the exercise (bench press, squat).
-
+    # Represents all exercises fetched from the external API.
     __tablename__ = 'exercises'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(255), nullable=True)
-    video_url = db.Column(db.String(255), nullable=True)
-    required_equipment = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)  # Avoid duplicates
+    type = db.Column(db.String(100), nullable=True)  # Type of exercise (e.g., strength)
+    muscle = db.Column(db.String(100), nullable=True)  # Targeted muscle
+    equipment = db.Column(db.String(100), nullable=True)  # Required equipment
+    difficulty = db.Column(db.String(50), nullable=True)  # Difficulty level
+    instructions = db.Column(db.Text, nullable=True)  # Exercise instructions
 
-    # Foreign Keys
-    muscle_group_id = db.Column(db.Integer, db.ForeignKey('muscle_groups.id'), nullable=False)
 
     # Relationships
+    muscle_group_association = db.relationship('MuscleGroup', backref='exercise', lazy=True) 
     favorites = db.relationship('UserFavorite', backref='exercise', lazy=True)  # Relationship with UserFavorite
     workout_plans = db.relationship('WorkoutPlanDetail', backref='exercise', lazy=True)  # Relationship with WorkoutPlanDetail
 

@@ -38,6 +38,7 @@ def create_app():
         from app.routes.workout_routes import workout_bp
         from app.routes.exercise_routes import exercise_bp
         from app.routes.muscle_group_routes import muscle_group_bp
+        
 
         app.register_blueprint(auth_bp, url_prefix='/api')
         app.register_blueprint(user_bp, url_prefix='/api')
