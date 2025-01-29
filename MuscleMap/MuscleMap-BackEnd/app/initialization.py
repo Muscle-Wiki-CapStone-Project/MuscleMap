@@ -6,13 +6,14 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_cors import CORS
 from app.config import Config
+from dotenv import load_dotenv
 
 # Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-
+load_dotenv()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -24,7 +25,8 @@ def create_app():
     login_manager.init_app(app)
 
 
-    login_manager.login_view = "auth.login"
+    login_manager.login_view = 'auth.login'
+    # login_manager.login_message = None
 
     # Enable CORS for all routes
     CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:5173"}})
@@ -36,11 +38,12 @@ def create_app():
         from app.routes.workout_routes import workout_bp
         from app.routes.exercise_routes import exercise_bp
         from app.routes.muscle_group_routes import muscle_group_bp
+        
 
         app.register_blueprint(auth_bp, url_prefix='/api')
         app.register_blueprint(user_bp, url_prefix='/api')
-        app.register_blueprint(workout_bp, url_prefix='/api')
         app.register_blueprint(exercise_bp, url_prefix='/api')
+        app.register_blueprint(workout_bp, url_prefix='/api')
         app.register_blueprint(muscle_group_bp, url_prefix='/api')
 
         # Import models

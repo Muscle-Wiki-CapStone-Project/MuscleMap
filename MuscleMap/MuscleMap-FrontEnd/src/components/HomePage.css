@@ -1,0 +1,9 @@
+.bodymap {
+    cursor: pointer;
+    transition: fill 0.3s ease;
+}
+
+.bodymap:hover {
+    fill: #ff0000;
+    /* Highlight on hover */
+}

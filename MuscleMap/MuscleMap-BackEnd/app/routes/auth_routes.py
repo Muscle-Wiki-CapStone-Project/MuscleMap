@@ -7,8 +7,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/register', methods=['POST'])
-def register():
+@auth_bp.route('/signup', methods=['POST'])
+def signup():
     data = request.json
     username = data.get('username')
     password = data.get('password')
@@ -24,8 +24,11 @@ def register():
 
     return jsonify({'message': 'User registered successfully'})
 
-@auth_bp.route('/login', methods=['POST'])
+@auth_bp.route('/login', methods=['GET','POST'])
 def login():
+    if request.method == 'GET':
+        return jsonify({'message': 'Login endpoint. Please use POST to log in.'})
+    
     data = request.json
     username = data.get('username')
     password = data.get('password')

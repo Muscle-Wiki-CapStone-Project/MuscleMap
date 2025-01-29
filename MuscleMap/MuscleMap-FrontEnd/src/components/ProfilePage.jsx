@@ -31,7 +31,6 @@ const ProfilePage = () => {
             <h2>Profile</h2>
             <p><strong>Username:</strong> {user.username}</p>
             <p><strong>Gender:</strong> {user.gender}</p>
-            {/* Display other profile info as needed */}
         </div>
     );
 };

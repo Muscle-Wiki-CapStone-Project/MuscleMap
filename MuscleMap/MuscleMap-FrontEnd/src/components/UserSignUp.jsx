@@ -13,7 +13,7 @@ const UserSignUp = () => {
 
         const body = { username, password, gender };
 
-        const [data, err] = await fetchHandler('/api/register', getPostOptions(body));
+        const [data, err] = await fetchHandler('/api/signup', getPostOptions(body));
 
         if (err) {
             setError('An error occurred during registration.');
