@@ -1,4 +1,3 @@
-# file to initialize all my flask app (extensions, blueprints etc)
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -13,7 +12,8 @@ db = SQLAlchemy()
 migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-load_dotenv()
+load_dotenv()  # Load environment variables from .env file
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -24,9 +24,7 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
 
-
     login_manager.login_view = 'auth.login'
-    # login_manager.login_message = None
 
     # Enable CORS for all routes
     CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:5173"}})
@@ -39,7 +37,6 @@ def create_app():
         from app.routes.exercise_routes import exercise_bp
         from app.routes.muscle_group_routes import muscle_group_bp
         
-
         app.register_blueprint(auth_bp, url_prefix='/api')
         app.register_blueprint(user_bp, url_prefix='/api')
         app.register_blueprint(exercise_bp, url_prefix='/api')
@@ -58,8 +55,4 @@ def create_app():
     def api_home():
         return "Welcome to MuscleMap API!"
     
-    print("Database URI:", app.config['SQLALCHEMY_DATABASE_URI'])
-
-
-
     return app

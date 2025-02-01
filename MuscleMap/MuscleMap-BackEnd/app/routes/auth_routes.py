@@ -24,11 +24,8 @@ def signup():
 
     return jsonify({'message': 'User registered successfully'})
 
-@auth_bp.route('/login', methods=['GET','POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
-    if request.method == 'GET':
-        return jsonify({'message': 'Login endpoint. Please use POST to log in.'})
-    
     data = request.json
     username = data.get('username')
     password = data.get('password')
