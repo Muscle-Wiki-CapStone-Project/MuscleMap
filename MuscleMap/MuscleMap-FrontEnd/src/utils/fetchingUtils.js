@@ -26,7 +26,8 @@ export const getPatchOptions = (body) => ({
 
 export const fetchHandler = async (url, options = {}) => {
     try {
-        const response = await fetch(`http://127.0.0.1:5000${url}`, {
+        console.log('Fetching from:', `${BACKEND_URL}${url}`)
+        const response = await fetch(`${BACKEND_URL}${url}`, {
             ...options,
             credentials: 'include',
         });

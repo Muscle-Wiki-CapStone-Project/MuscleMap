@@ -24,12 +24,15 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
 
+    
 
     login_manager.login_view = 'auth.login'
     # login_manager.login_message = None
 
     # Enable CORS for all routes
-    CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+    CORS(app, supports_credentials=True, resources={r"/api/*": {"origins":[ "http://localhost:5173","http://127.0.0.1:5173"]}})
+    # CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+
 
     # Register blueprints
     with app.app_context():

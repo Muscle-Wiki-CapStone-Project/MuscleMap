@@ -40,6 +40,8 @@ class MuscleGroup(db.Model):
     # Foreign Keys
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'), nullable=False)
 
+    exercises = db.relationship('Exercise', backref='muscle_group', lazy=True)
+
 # Exercise Table
 class Exercise(db.Model):
     # Represents all exercises fetched from the external API.

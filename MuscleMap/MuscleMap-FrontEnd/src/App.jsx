@@ -4,6 +4,8 @@ import UserSignUp from './components/UserSignUp';
 import LoginPage from './components/LoginPage';
 import ProfilePage from './components/ProfilePage';
 import HomePage from './components/HomePage';
+import ExercisesPage from './components/ExercisesPage';
+import AllExercisesPage from './components/AllExercisesPage';
 
 const App = () => {
   return (
@@ -13,6 +15,11 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/exercises/:muscle" element={< ExercisesPage />} />
+        <Route path="/exercises" element={< AllExercisesPage />} />
+
+
+
       </Routes>
     </Router>
   );
