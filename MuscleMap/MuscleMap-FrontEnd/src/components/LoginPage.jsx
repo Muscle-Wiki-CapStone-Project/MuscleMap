@@ -12,16 +12,16 @@ const LoginPage = () => {
 
         const body = { username, password };
 
-        const [response, err] = await fetchHandler('/api/login', getPostOptions(body));
+        const [response, err] = await fetchHandler('/api/login', getPostOptions(body)); // Ensure POST method
 
         if (err) {
             setError('Invalid username or password.');
         } else {
             setMessage('Login successful!');
-            // Redirect to profile or dashboard after successful login
-            window.location.href = '/profile'; // Example redirect
+            window.location.href = '/profile'; // Redirect after login
         }
     };
+
 
     return (
         <div>

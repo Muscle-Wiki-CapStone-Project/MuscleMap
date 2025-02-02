@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify
 from app.initialization import db
 from app.models import Exercise, MuscleGroup
 
+
 exercise_bp = Blueprint('exercise', __name__)
 
 API_BASE_URL = "https://api.api-ninjas.com/v1/exercises"

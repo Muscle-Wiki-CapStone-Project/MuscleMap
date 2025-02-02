@@ -24,18 +24,35 @@ def signup():
 
     return jsonify({'message': 'User registered successfully'})
 
-@auth_bp.route('/login', methods=['POST'])
+from flask import request, jsonify, redirect, url_for
+from flask_login import login_user, current_user
+from app.models import User
+
+@auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
+    # Handle GET request for already logged-in users
+    if current_user.is_authenticated:
+        return redirect(url_for('users.get_current_user'))  # Redirect to profile if logged in
+    
+    # Handle POST request for login
+    if request.method == 'POST':
+        data = request.get_json()  # Use .get_json() to parse JSON body
+        username = data.get('username')
+        password = data.get('password')
 
-    user = User.query.filter_by(username=username).first()
-    if not user or not user.check_password(password):
-        return jsonify({'error': 'Invalid username or password'}), 401
+        # Check if user exists and password is correct
+        user = User.query.filter_by(username=username).first()
+        if not user or not user.check_password(password):
+            return jsonify({'error': 'Invalid username or password'}), 401
+        
+        # Log in the user
+        login_user(user)
+        
+        # Respond with a success message or a token
+        return jsonify({'message': 'Logged in successfully'}), 200
 
-    login_user(user)
-    return jsonify({'message': 'Logged in successfully'})
+    # If it's a GET request and user is not logged in, return a login prompt or error
+    return jsonify({'message': 'Please log in to access this endpoint.'}), 401
 
 @auth_bp.route('/logout', methods=['POST'])
 @login_required
