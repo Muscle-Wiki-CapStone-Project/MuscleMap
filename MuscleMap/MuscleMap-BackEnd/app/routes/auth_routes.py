@@ -32,6 +32,7 @@ from app.models import User
 def login():
     # Handle GET request for already logged-in users
     if current_user.is_authenticated:
+        print("Current user:", current_user.is_authenticated)
         return redirect(url_for('users.get_current_user'))  # Redirect to profile if logged in
     
     # Handle POST request for login
