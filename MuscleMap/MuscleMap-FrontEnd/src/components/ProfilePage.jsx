@@ -8,6 +8,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             const [response, err] = await fetchHandler('/api/profile');
+
             if (err) {
                 setError('Failed to load profile');
             } else {

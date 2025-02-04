@@ -32,7 +32,7 @@ class MuscleGroup(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    description = db.Column(db.String(255), nullable=True)
+   
 
     # Relationship with Exercise
     exercises = db.relationship('Exercise', back_populates='muscle_group', lazy=True)

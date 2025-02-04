@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 from app.initialization import db, bcrypt
 from app.models import User
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_cors import cross_origin
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -28,32 +29,35 @@ from flask import request, jsonify, redirect, url_for
 from flask_login import login_user, current_user
 from app.models import User
 
-@auth_bp.route('/login', methods=['POST', 'GET'])
+from flask import Blueprint, request, jsonify, redirect, url_for
+from flask_login import login_user, current_user
+from app.models import User
+from flask_cors import cross_origin
+
+auth_bp = Blueprint('auth', __name__)
+
+@auth_bp.route('/login', methods=['GET', 'POST'])  
+@cross_origin(origins="http://localhost:5173", supports_credentials=True) 
 def login():
-    # Handle GET request for already logged-in users
-    if current_user.is_authenticated:
-        print("Current user:", current_user.is_authenticated)
-        return redirect(url_for('users.get_current_user'))  # Redirect to profile if logged in
-    
-    # Handle POST request for login
-    if request.method == 'POST':
-        data = request.get_json()  # Use .get_json() to parse JSON body
-        username = data.get('username')
-        password = data.get('password')
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            print("User is already logged in:", current_user.username)
+            return jsonify({"message": "Already logged in", "user": current_user.username}), 200
+        return jsonify({"message": "Please log in"}), 401
 
-        # Check if user exists and password is correct
-        user = User.query.filter_by(username=username).first()
-        if not user or not user.check_password(password):
-            return jsonify({'error': 'Invalid username or password'}), 401
-        
-        # Log in the user
-        login_user(user)
-        
-        # Respond with a success message or a token
-        return jsonify({'message': 'Logged in successfully'}), 200
+    # Handle POST login (existing code)
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
 
-    # If it's a GET request and user is not logged in, return a login prompt or error
-    return jsonify({'message': 'Please log in to access this endpoint.'}), 401
+    user = User.query.filter_by(username=username).first()
+    if not user or not user.check_password(password):
+        return jsonify({'error': 'Invalid username or password'}), 401
+
+    login_user(user)
+    return jsonify({'message': 'Logged in successfully'}), 200
+
+
 
 @auth_bp.route('/logout', methods=['POST'])
 @login_required
