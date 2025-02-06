@@ -27,39 +27,35 @@ class User(db.Model, UserMixin):
         # Checks if the provided password matches the hashed password
         return bcrypt.check_password_hash(self.password_hash, password)
 
-
-# Muscle Group Table
 class MuscleGroup(db.Model):
-
-    # Represents a muscle group (e.g., chest, back, legs).
     __tablename__ = 'muscle_groups'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)  # Muscle name (e.g., biceps, lats)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+   
 
-    # Foreign Keys
-    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'), nullable=False)
+    # Relationship with Exercise
+    exercises = db.relationship('Exercise', back_populates='muscle_group', lazy=True)
 
-    exercises = db.relationship('Exercise', backref='muscle_group', lazy=True)
-
-# Exercise Table
 class Exercise(db.Model):
-    # Represents all exercises fetched from the external API.
     __tablename__ = 'exercises'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)  # Avoid duplicates
-    type = db.Column(db.String(100), nullable=True)  # Type of exercise (e.g., strength)
-    muscle = db.Column(db.String(100), nullable=True)  # Targeted muscle
-    equipment = db.Column(db.String(100), nullable=True)  # Required equipment
-    difficulty = db.Column(db.String(50), nullable=True)  # Difficulty level
-    instructions = db.Column(db.Text, nullable=True)  # Exercise instructions
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    type = db.Column(db.String(100), nullable=True)
+    muscle = db.Column(db.String(100), nullable=True)
+    equipment = db.Column(db.String(100), nullable=True)
+    difficulty = db.Column(db.String(50), nullable=True)
+    instructions = db.Column(db.Text, nullable=True)
+
+    # Foreign key to muscle_groups
+    muscle_group_id = db.Column(db.Integer, db.ForeignKey('muscle_groups.id'), nullable=False)
+
+    # Define relationship to MuscleGroup
+    muscle_group = db.relationship('MuscleGroup', back_populates='exercises')
 
 
-    # Relationships
-    muscle_group_association = db.relationship('MuscleGroup', backref='exercise', lazy=True) 
-    favorites = db.relationship('UserFavorite', backref='exercise', lazy=True)  # Relationship with UserFavorite
-    workout_plans = db.relationship('WorkoutPlanDetail', backref='exercise', lazy=True)  # Relationship with WorkoutPlanDetail
+
 
 
 # UserFavorite Table

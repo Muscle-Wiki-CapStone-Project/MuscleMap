@@ -59,7 +59,9 @@
 //     );
 // };
 
-// export default HomePage;
+// export default HomePage
+
+
 import React from "react";
 import InteractiveBodyMap from "./InteractiveBodyMap";
 

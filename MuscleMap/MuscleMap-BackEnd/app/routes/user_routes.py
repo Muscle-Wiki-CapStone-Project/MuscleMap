@@ -1,19 +1,19 @@
-# user related actions 
-from flask import Blueprint, jsonify
-from flask_login import login_required, current_user
-from app.initialization import db
+from flask import Blueprint, request, jsonify, session
+from app.models import User
 
-user_bp = Blueprint('users', __name__)
+user_bp = Blueprint('user_bp', __name__)
 
-@user_bp.route('/profile', methods=['GET'])
-@login_required
-def get_current_user():
-    print("Inside the profile route")  # Debugging message
-    if current_user.is_authenticated:
-        print(f"User {current_user.username} is authenticated")  # Debugging message
-        return jsonify({
-            'id': current_user.id,
-            'username': current_user.username,
-            'gender': current_user.gender,
-        })
-    return jsonify({'error': 'Unauthorized'}), 401
+@user_bp.route('/profile', methods=['POST', 'GET'])
+def profile():
+    data = request.json
+    session_id = data.get('session_id')
+
+    if not session_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    user = User.query.get(session_id)  # Look up user by session_id
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    return jsonify({'username': user.username, 'gender': user.gender})

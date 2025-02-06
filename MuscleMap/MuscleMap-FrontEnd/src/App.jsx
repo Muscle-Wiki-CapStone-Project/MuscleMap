@@ -6,10 +6,12 @@ import ProfilePage from './components/ProfilePage';
 import HomePage from './components/HomePage';
 import ExercisesPage from './components/ExercisesPage';
 import AllExercisesPage from './components/AllExercisesPage';
+import NavBar from './components/NavBar';
 
 const App = () => {
   return (
     <Router>
+      <NavBar />
       <Routes>
         <Route path="/signup" element={<UserSignUp />} />
         <Route path="/login" element={<LoginPage />} />

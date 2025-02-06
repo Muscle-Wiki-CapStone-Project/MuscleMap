@@ -1,3 +1,4 @@
+import React from "react"
 import { useState, useEffect } from "react"
 import { fetchHandler } from "../utils/fetchingUtils"
 import { useParams } from "react-router-dom"

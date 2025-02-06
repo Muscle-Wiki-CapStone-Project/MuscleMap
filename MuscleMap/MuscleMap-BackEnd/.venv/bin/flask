@@ -1,4 +1,4 @@
-#!/Users/pat/Development/Python-Capstone/MuscleMap/MuscleMap/MuscleMap/MuscleMap-BackEnd/.venv/bin/python
+#!/Users/pat/Development/Python-Capstone/MuscleMap/MuscleMap/MuscleMap/MuscleMap-BackEnd/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
