@@ -66,10 +66,10 @@ class UserFavorite(db.Model):
     __tablename__ = 'user_favorites'
 
     id = db.Column(db.Integer, primary_key=True)
-
-    # Foreign Keys
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'), nullable=False)
+
+    exercise = db.relationship('Exercise', lazy=True)
 
 
 # UserWorkout Table
