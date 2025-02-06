@@ -1,52 +1,46 @@
 import React, { useState } from 'react';
-import { fetchHandler, getPostOptions } from '../utils/fetchingUtils';
+import { login } from '../utils/fetchingUtils';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    const [message, setMessage] = useState('');
 
-    const handleSubmit = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        setError(null); // Clear previous errors
 
-        const body = { username, password };
+        const [user, loginError] = await login(username, password);
 
-        const [response, err] = await fetchHandler('/api/login', getPostOptions(body)); // Ensure POST method
+        if (loginError) {
+            setError('Invalid username or password');
+            return;
+        }
 
-        if (err) {
-            setError('Invalid username or password.');
-        } else {
-            setMessage('Login successful!');
-            window.location.href = '/profile'; // Redirect after login
+        if (user) {
+            window.location.href = '/profile'; // Redirect to profile page
         }
     };
 
-
     return (
         <div>
-            <h2>Login</h2>
-            {message && <p>{message}</p>}
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+            <h1>Login</h1>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <form onSubmit={handleLogin}>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
                 <button type="submit">Login</button>
             </form>
         </div>
