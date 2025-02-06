@@ -122,3 +122,41 @@ export const fetchAndStoreExercises = async (muscle) => {
     }
     return [data, error];
 };
+
+// 🔥 Add Exercise to Favorites (Include Session ID)
+export const addFavorite = async (exerciseId) => {
+    const sessionId = Cookies.get('session_id');
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler('/api/favorites', getPostOptions({ session_id: sessionId, exercise_id: exerciseId }));
+};
+
+// ❌ Remove Exercise from Favorites (Include Session ID)
+export const removeFavorite = async (exerciseId) => {
+    const sessionId = Cookies.get('session_id');
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler(`/api/favorites/${exerciseId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId })
+    });
+};
+
+// ❤️ Get User's Favorite Exercises (Include Session ID)
+export const getFavorites = async () => {
+    const sessionId = Cookies.get('session_id');
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler('/api/favorites', getPostOptions({ session_id: sessionId }));
+};
