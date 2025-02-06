@@ -75,20 +75,36 @@ def remove_favorite(exercise_id):
     return jsonify({'message': 'Exercise removed from favorites'}), 200
 
 
-# ❤️ Get User's Favorite Exercises (Manual Session Handling)
-@user_bp.route('/favorites', methods=['POST'])
+
+
+
+from flask import request
+
+@user_bp.route('/favorites', methods=['GET'])
 def get_favorites():
-    data = request.json
-    session_id = data.get('session_id')
+    session_id = request.headers.get('Authorization')  # 🔥 Read from headers
+
+    if session_id and session_id.startswith("Bearer "):
+        session_id = session_id.split(" ")[1]  # Extract the actual ID
 
     if not session_id:
-        return jsonify({'error': 'Session ID required'}), 400
+        session_id = request.cookies.get('session_id')  # 🔥 Fallback to cookies
+
+    if not session_id:
+        return jsonify({'error': 'Unauthorized'}), 401
 
     user = User.query.get(session_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
     favorites = UserFavorite.query.filter_by(user_id=user.id).all()
-    favorite_exercises = [fav.exercise_id for fav in favorites]
+    
+    favorite_exercises = [{
+        'id': fav.exercise.id,
+        'name': fav.exercise.name,
+        'type': fav.exercise.type,
+        'equipment': fav.exercise.equipment,
+        'difficulty': fav.exercise.difficulty
+    } for fav in favorites]
 
     return jsonify({'favorites': favorite_exercises}), 200

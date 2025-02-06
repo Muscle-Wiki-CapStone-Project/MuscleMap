@@ -150,13 +150,20 @@ export const removeFavorite = async (exerciseId) => {
     });
 };
 
-// ❤️ Get User's Favorite Exercises (Include Session ID)
+// Fetch User's Favorite Exercises (Now Uses `session_id`)
 export const getFavorites = async () => {
-    const sessionId = Cookies.get('session_id');
+    const sessionId = Cookies.get("session_id"); // 🔥 Get dynamically from cookies
     if (!sessionId) {
         console.error("No session ID found. User is not logged in.");
         return [null, new Error("User not logged in")];
     }
 
-    return fetchHandler('/api/favorites', getPostOptions({ session_id: sessionId }));
+    return fetchHandler("/api/favorites", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${sessionId}`,  // 🔥 Send the correct session ID dynamically
+            "Content-Type": "application/json"
+        }
+    });
 };
+

@@ -1,75 +1,134 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { fetchHandler, getFavorites, addFavorite } from "../utils/fetchingUtils";
 import { useParams } from "react-router-dom";
-import { fetchHandler } from "../utils/fetchingUtils";
-import { addFavorite, removeFavorite, getFavorites } from "../utils/fetchingUtils";
 import Cookies from "js-cookie";
 
 const ExercisesPage = () => {
     const { muscle } = useParams();
     const [exercises, setExercises] = useState([]);
-    const [favorites, setFavorites] = useState(new Set());
+    const [favorites, setFavorites] = useState([]); // Store user's favorited exercises
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchExercisesFromDatabase();
-        fetchUserFavorites();
+        const fetchExercises = async () => {
+            if (!muscle) {
+                setError("No muscle group provided");
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            const [data, err] = await fetchHandler(`/api/exercises/${muscle}`);
+
+            if (err) {
+                setError("Failed to fetch exercises");
+            } else {
+                setExercises(data);
+            }
+            setLoading(false);
+        };
+
+        const fetchUserFavorites = async () => {
+            const [data, err] = await getFavorites();
+            if (!err && data) {
+                setFavorites(data.favorites.map(fav => fav.id)); // 🔥 Only store exercise IDs
+                console.log("Fetched favorites:", data.favorites);
+            }
+        };
+
+        fetchExercises();
+        fetchUserFavorites(); // 🔥 Fetch favorites when page loads
     }, [muscle]);
 
-    // Fetch exercises from the backend
-    const fetchExercisesFromDatabase = async () => {
-        if (!muscle) {
-            setError("No muscle group provided");
-            setLoading(false);
-            return;
-        }
+    // ❤️ Handle Favoriting an Exercise
+    const handleFavorite = async (exerciseId) => {
+        const [response, error] = await addFavorite(exerciseId);
 
-        const [data, err] = await fetchHandler(`/api/exercises/${muscle}`);
-        if (err) {
-            setError("Failed to load exercises from the database");
-        } else {
-            setExercises(data);
-        }
-        setLoading(false);
-    };
-
-    // Fetch user's favorite exercises
-    const fetchUserFavorites = async () => {
-        const sessionId = Cookies.get("session_id");
-        if (!sessionId) {
-            console.warn("User not logged in. Can't fetch favorites.");
-            return;
-        }
-
-        const [data, err] = await getFavorites();
-        if (!err) {
-            setFavorites(new Set(data.favorites));
+        if (!error) {
+            setFavorites((prevFavorites) => [...prevFavorites, exerciseId]); // 🔥 Update UI instantly
+            console.log("Exercise favorited:", exerciseId);
         }
     };
 
-    // Toggle favorite (add/remove)
-    const toggleFavorite = async (exerciseId) => {
-        const sessionId = Cookies.get("session_id");
-        if (!sessionId) {
-            alert("You must be logged in to save favorites!");
-            return;
-        }
-
-        if (favorites.has(exerciseId)) {
-            await removeFavorite(exerciseId);
-            setFavorites((prev) => {
-                const newFavorites = new Set(prev);
-                newFavorites.delete(exerciseId);
-                return newFavorites;
-            });
-        } else {
-            await addFavorite(exerciseId);
-            setFavorites((prev) => new Set([...prev, exerciseId]));
-        }
+    const pageStyle = {
+        minHeight: "100vh",
+        padding: "20px",
+        backgroundColor: "#f0f4f8",
+        fontFamily: "Arial, sans-serif",
     };
 
-    if (loading) return <p>Loading exercises...</p>;
-    if (error) return <p>Error: {error}</p>;
+    const headingStyle = {
+        fontSize: "2.5rem",
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: "30px",
+        color: "#2c3e50",
+    };
+
+    const exerciseGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+        gap: "20px",
+    };
+
+    const exerciseCardStyle = {
+        backgroundColor: "white",
+        borderRadius: "8px",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        padding: "20px",
+        transition: "transform 0.3s ease",
+    };
+
+    const exerciseNameStyle = {
+        fontSize: "1.5rem",
+        fontWeight: "bold",
+        marginBottom: "15px",
+        color: "#3498db",
+    };
+
+    const labelStyle = {
+        fontWeight: "bold",
+        color: "#34495e",
+    };
+
+    const textStyle = {
+        color: "black",
+        marginBottom: "10px",
+    };
+
+    const instructionsStyle = {
+        marginTop: "15px",
+        lineHeight: "1.6",
+        color: "black",
+    };
+
+    if (loading) {
+        return (
+            <div style={{ ...pageStyle, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <p>Loading exercises...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{ ...pageStyle, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <div
+                    style={{
+                        backgroundColor: "white",
+                        padding: "20px",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                        textAlign: "center",
+                    }}
+                >
+                    <h1 style={{ color: "#e74c3c", fontSize: "1.5rem", marginBottom: "10px" }}>Error</h1>
+                    <p>{error}</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={pageStyle}>
@@ -97,22 +156,18 @@ const ExercisesPage = () => {
                             <br />
                             {exercise.instructions}
                         </p>
-
-                        {/* Heart Button for Favorites */}
+                        {/* 💖 Favorite Button */}
                         <button
-                            onClick={() => toggleFavorite(exercise.id)}
+                            onClick={() => handleFavorite(exercise.id)}
                             style={{
-                                position: "absolute",
-                                top: "10px",
-                                right: "10px",
                                 background: "none",
                                 border: "none",
                                 cursor: "pointer",
                                 fontSize: "24px",
-                                color: favorites.has(exercise.id) ? "red" : "gray",
+                                color: favorites.includes(exercise.id) ? "red" : "gray",
                             }}
                         >
-                            {favorites.has(exercise.id) ? "❤️" : "🤍"}
+                            {favorites.includes(exercise.id) ? "❤️" : "🤍"}
                         </button>
                     </div>
                 ))}
@@ -122,57 +177,3 @@ const ExercisesPage = () => {
 };
 
 export default ExercisesPage;
-
-// 🔥 Styles
-const pageStyle = {
-    minHeight: "100vh",
-    padding: "20px",
-    backgroundColor: "#f0f4f8",
-    fontFamily: "Arial, sans-serif",
-};
-
-const headingStyle = {
-    fontSize: "2.5rem",
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: "30px",
-    color: "#2c3e50",
-};
-
-const exerciseGridStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-    gap: "20px",
-};
-
-const exerciseCardStyle = {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    padding: "20px",
-    transition: "transform 0.3s ease",
-    position: "relative",
-};
-
-const exerciseNameStyle = {
-    fontSize: "1.5rem",
-    fontWeight: "bold",
-    marginBottom: "15px",
-    color: "#3498db",
-};
-
-const labelStyle = {
-    fontWeight: "bold",
-    color: "#34495e",
-};
-
-const textStyle = {
-    color: "black",
-    marginBottom: "10px",
-};
-
-const instructionsStyle = {
-    marginTop: "15px",
-    lineHeight: "1.6",
-    color: "black",
-};
