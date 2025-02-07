@@ -1,38 +1,57 @@
 import React, { useState } from "react";
-import FrontView from "./FrontView";
+import FemaleFrontView from "./FemaleFrontView";
+import FemaleBackView from "./FemaleBackView"
 import BackView from "./BackView";
+import FrontView from "./FrontView"
 
 const InteractiveBodyMap = () => {
-    const [view, setView] = useState("front");
+    const [gender, setGender] = useState("female"); // "male" or "female"
+    const [view, setView] = useState("front"); // "front" or "back"
     const [selectedPart, setSelectedPart] = useState(null);
 
     const handlePartClick = (part) => {
         setSelectedPart(part);
+        console.log(`You clicked on: ${part}`);
+    };
+
+    const renderBodyView = () => {
+        if (gender === "male" && view === "front") return <FrontView onClick={handlePartClick} />;
+        if (gender === "male" && view === "back") return <BackView onClick={handlePartClick} />;
+        if (gender === "female" && view === "front") return <FemaleFrontView onClick={handlePartClick} />;
+        if (gender === "female" && view === "back") return <FemaleBackView onClick={handlePartClick} />;
     };
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-4">Interactive Body Map</h1>
-            <div className="flex justify-center mb-4">
-                <button
-                    className={`px-4 py-2 mr-2 ${view === "front" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-                    onClick={() => setView("front")}
-                >
+        <div className="flex flex-col items-center">
+            {/* Gender Toggle */}
+            <div className="flex space-x-4 mb-4">
+                <button className={`px-4 py-2 rounded ${gender === "male" ? "bg-blue-600 text-white" : "bg-gray-300"}`} onClick={() => setGender("male")}>
+                    Male
+                </button>
+                <button className={`px-4 py-2 rounded ${gender === "female" ? "bg-pink-500 text-white" : "bg-gray-300"}`} onClick={() => setGender("female")}>
+                    Female
+                </button>
+            </div>
+
+            {/* View Toggle */}
+            <div className="flex space-x-4 mb-4">
+                <button className={`px-4 py-2 rounded ${view === "front" ? "bg-green-500 text-white" : "bg-gray-300"}`} onClick={() => setView("front")}>
                     Front View
                 </button>
-                <button
-                    className={`px-4 py-2 ${view === "back" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-                    onClick={() => setView("back")}
-                >
+                <button className={`px-4 py-2 rounded ${view === "back" ? "bg-green-500 text-white" : "bg-gray-300"}`} onClick={() => setView("back")}>
                     Back View
                 </button>
             </div>
-            <div className="flex justify-center">
-                {view === "front" ? <FrontView onPartClick={handlePartClick} /> : <BackView onPartClick={handlePartClick} />}
+
+            {/* Render the selected view */}
+            <div className="relative">
+                {renderBodyView()}
             </div>
+
+            {/* Selected Body Part Display */}
             {selectedPart && (
-                <div className="mt-4 text-center">
-                    <h2 className="text-xl font-semibold">Selected Part: {selectedPart}</h2>
+                <div className="mt-4 p-2 bg-gray-200 rounded">
+                    <p>You selected: <strong>{selectedPart}</strong></p>
                 </div>
             )}
         </div>

@@ -167,3 +167,89 @@ export const getFavorites = async () => {
     });
 };
 
+export const getWorkouts = async () => {
+    const sessionId = Cookies.get("session_id");
+    console.log("Session ID being sent in GET /api/workouts:", sessionId);  // 🔥 Debugging line
+
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler("/api/workouts", {
+        method: "GET",
+        credentials: "include", // ✅ Ensures cookies are sent
+        headers: {
+            "Authorization": `Bearer ${sessionId}`,  // ✅ Send session_id in headers
+            "Content-Type": "application/json"
+        }
+    });
+};
+
+// 🔥 Create a Workout Routine (Debugging Added)
+export const createWorkout = async (title, exerciseIds, description) => {
+    const sessionId = Cookies.get("session_id");
+    console.log("Session ID being sent in POST /api/workouts:", sessionId);  // 🔥 Debugging line
+
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler("/api/workouts", {
+        method: "POST",
+        credentials: "include", // ✅ Ensures cookies are sent
+        headers: {
+            "Authorization": `Bearer ${sessionId}`,  // ✅ Send session_id in headers
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title,
+            exercise_ids: exerciseIds,
+            description
+        })
+    });
+};
+
+
+// 🔥 Update a Workout Routine
+export const updateWorkout = async (workoutId, title, description) => {
+    const sessionId = Cookies.get("session_id");
+
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler(`/api/workouts/${workoutId}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${sessionId}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title, description })
+    });
+};
+
+
+// 🔥 Delete a Workout Routine
+export const deleteWorkout = async (workoutId) => {
+    const sessionId = Cookies.get("session_id");
+
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler(`/api/workouts/${workoutId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${sessionId}`,
+            "Content-Type": "application/json"
+        }
+    });
+};
+
+
