@@ -6,6 +6,7 @@ import ProfilePage from './components/ProfilePage';
 import HomePage from './components/HomePage';
 import ExercisesPage from './components/ExercisesPage';
 import AllExercisesPage from './components/AllExercisesPage';
+import EditWorkoutPage from './components/EditWorkoutPage';
 import NavBar from './components/NavBar';
 
 const App = () => {
@@ -19,7 +20,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/exercises/:muscle" element={< ExercisesPage />} />
         <Route path="/exercises" element={< AllExercisesPage />} />
-
+        <Route path="/edit-workout/:workoutId" element={<EditWorkoutPage />} />
 
 
       </Routes>

@@ -214,12 +214,42 @@ export const createWorkout = async (title, exerciseIds, description) => {
 
 // 🔥 Update a Workout Routine
 export const updateWorkout = async (workoutId, title, description) => {
-    return fetchHandler(`/api/workouts/${workoutId}`, getPatchOptions({ title, description }));
+    const sessionId = Cookies.get("session_id");
+
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler(`/api/workouts/${workoutId}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${sessionId}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title, description })
+    });
 };
+
 
 // 🔥 Delete a Workout Routine
 export const deleteWorkout = async (workoutId) => {
-    return fetchHandler(`/api/workouts/${workoutId}`, deleteOptions);
+    const sessionId = Cookies.get("session_id");
+
+    if (!sessionId) {
+        console.error("No session ID found. User is not logged in.");
+        return [null, new Error("User not logged in")];
+    }
+
+    return fetchHandler(`/api/workouts/${workoutId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${sessionId}`,
+            "Content-Type": "application/json"
+        }
+    });
 };
 
 

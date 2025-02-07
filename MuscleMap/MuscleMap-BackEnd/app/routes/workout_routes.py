@@ -81,3 +81,59 @@ def create_workout():
     db.session.commit()
 
     return jsonify({'message': 'Workout routine created', 'workout_id': new_workout.id}), 201
+
+@workout_bp.route('/workouts/<int:workout_id>', methods=['PATCH'])
+def update_workout(workout_id):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        session_id = request.headers.get("Authorization")
+        if session_id and session_id.startswith("Bearer "):
+            session_id = session_id.split("Bearer ")[1]
+
+    if not session_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    user = User.query.get(session_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    workout = UserWorkout.query.get(workout_id)
+    if not workout or workout.user_id != user.id:
+        return jsonify({'error': 'Workout not found or not authorized'}), 403
+
+    data = request.json
+    workout.plan_name = data.get("title", workout.plan_name)
+    workout.description = data.get("description", workout.description)
+
+    db.session.commit()
+
+    return jsonify({'message': 'Workout updated successfully'}), 200
+
+
+
+
+
+
+@workout_bp.route('/workouts/<int:workout_id>', methods=['DELETE'])
+def delete_workout(workout_id):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        session_id = request.headers.get("Authorization")
+        if session_id and session_id.startswith("Bearer "):
+            session_id = session_id.split("Bearer ")[1]
+
+    if not session_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    user = User.query.get(session_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    workout = UserWorkout.query.get(workout_id)
+    if not workout or workout.user_id != user.id:
+        return jsonify({'error': 'Workout not found or not authorized'}), 403
+
+    db.session.delete(workout)
+    db.session.commit()
+
+    return jsonify({'message': 'Workout deleted successfully'}), 200

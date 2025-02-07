@@ -1,55 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { fetchProfile, logout, getFavorites, createWorkout, getWorkouts, deleteWorkout } from '../utils/fetchingUtils';
+import React, { useEffect, useState } from 'react';
+import { fetchProfile, logout, getWorkouts, deleteWorkout } from '../utils/fetchingUtils';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
-    const [favorites, setFavorites] = useState([]);
     const [workouts, setWorkouts] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [selectedExercises, setSelectedExercises] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadProfile = async () => {
             const [profileData] = await fetchProfile();
-            if (profileData) setUser(profileData);
-
-            const [favData] = await getFavorites();
-            if (favData) setFavorites(favData.favorites);
-
-            const [workoutData] = await getWorkouts();
-            if (workoutData) setWorkouts(workoutData.workouts);
+            if (profileData) {
+                setUser(profileData);
+            }
         };
+
+        const loadWorkouts = async () => {
+            const [workoutData] = await getWorkouts();
+            if (workoutData) {
+                setWorkouts(workoutData.workouts);
+            }
+        };
+
         loadProfile();
+        loadWorkouts();
     }, []);
 
-    const handleCreateWorkout = async () => {
-        const [response, error] = await createWorkout(title, selectedExercises, description);
+    const handleDeleteWorkout = async (workoutId) => {
+        const [response, error] = await deleteWorkout(workoutId);
         if (!error) {
-            setShowForm(false);
-            setWorkouts([...workouts, { title, description }]);
+            setWorkouts(workouts.filter(workout => workout.id !== workoutId)); // ✅ Remove from UI
         }
     };
 
     return (
         <div>
             <h1>Profile</h1>
-            {user && <p>Welcome, {user.username}</p>}
-            <button onClick={() => setShowForm(true)}>Create Workout Routine</button>
-
-            {showForm && (
+            {user ? (
                 <div>
-                    <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Routine Title" />
-                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
-                    {favorites.map(ex => (
-                        <div key={ex.id}>
-                            <input type="checkbox" value={ex.id} onChange={() => setSelectedExercises([...selectedExercises, ex.id])} />
-                            {ex.name}
-                        </div>
-                    ))}
-                    <button onClick={handleCreateWorkout}>Save Routine</button>
+                    <p><strong>Username:</strong> {user.username}</p>
+                    <p><strong>Gender:</strong> {user.gender}</p>
+                    <button onClick={logout}>Logout</button>
+                    <br />
+                    <button onClick={() => navigate('/create-workout')}>Create Workout Routine</button>
+
+
+                    <h2>Your Workouts</h2>
+                    {workouts.length === 0 ? <p>No workouts yet.</p> : (
+                        workouts.map((workout) => (
+                            <div key={workout.id} style={{ border: "1px solid gray", padding: "10px", margin: "10px 0" }}>
+                                <h3>{workout.title}</h3>
+                                <p>{workout.description}</p>
+                                <button onClick={() => navigate(`/edit-workout/${workout.id}`)}>Edit</button>
+                                <button onClick={() => handleDeleteWorkout(workout.id)}>Delete</button>
+                            </div>
+                        ))
+                    )}
                 </div>
+            ) : (
+                <p>Loading profile...</p>
             )}
         </div>
     );
