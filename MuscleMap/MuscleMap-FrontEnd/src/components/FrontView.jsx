@@ -8,7 +8,6 @@ const FrontView = ({ }) => {
         navigate(`/exercises/${muscle.toLowerCase()}`)
     }
 
-
     return (
         <svg viewBox="0 0 660.46 1206.46" className="w-full max-w-md">
             <defs>
