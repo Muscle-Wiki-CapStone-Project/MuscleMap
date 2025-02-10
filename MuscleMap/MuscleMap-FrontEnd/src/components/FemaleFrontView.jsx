@@ -17,8 +17,8 @@ const FemaleFrontView = () => {
         >
             <defs>
                 <radialGradient id="jointradial" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                    <stop offset="0%" style={{ stopColor: "rgb(254, 91, 127)", stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: "rgb(231, 236, 239)", stopOpacity: 1 }} />
+                    <stop offset="0%" style={{ stopColor: "rgb(0, 0, 0)", stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: "rgb(0, 0, 0)", stopOpacity: 1 }} />
                 </radialGradient>
             </defs>
 
