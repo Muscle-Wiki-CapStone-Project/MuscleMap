@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import User, UserWorkout
+from app.models import User, UserWorkout, Exercise
 from app.initialization import db
 
 workout_bp = Blueprint('workout_bp', __name__)
@@ -13,16 +13,14 @@ def workouts():
         return create_workout()
     return jsonify({'error': 'Method not allowed'}), 405  # Fallback
 
-# ✅ Fetch User Workouts
+# ✅ Fetch User Workouts with Exercises
+@workout_bp.route('/workouts', methods=['GET'])
 def get_workouts():
     session_id = request.cookies.get("session_id")
     if not session_id:
         session_id = request.headers.get("Authorization")
         if session_id and session_id.startswith("Bearer "):
             session_id = session_id.split("Bearer ")[1]
-
-    print("Cookies received in GET /api/workouts:", request.cookies)
-    print("Session ID received in GET /api/workouts:", session_id)
 
     if not session_id:
         return jsonify({'error': 'Unauthorized'}), 401
@@ -36,20 +34,23 @@ def get_workouts():
     workout_list = [{
         'id': workout.id,
         'title': workout.plan_name,
-        'description': workout.description
+        'description': workout.description,
+        'exercises': [exercise.name for exercise in workout.exercises]  # ✅ Fetch exercises correctly
     } for workout in workouts]
 
     return jsonify({'workouts': workout_list}), 200
 
+
+
+
 # ✅ Create a Workout Routine
+@workout_bp.route('/workouts', methods=['POST'])
 def create_workout():
     session_id = request.cookies.get("session_id")
     if not session_id:
         session_id = request.headers.get("Authorization")
         if session_id and session_id.startswith("Bearer "):
             session_id = session_id.split("Bearer ")[1]
-
-    print("Session ID received in POST /api/workouts:", session_id)
 
     if not session_id:
         return jsonify({'error': 'Unauthorized'}), 401
@@ -66,20 +67,18 @@ def create_workout():
     if not title or not exercise_ids:
         return jsonify({'error': 'Title and at least one exercise are required'}), 400
 
-    # Ensure user only adds favorited exercises
-    valid_exercise_ids = [fav.exercise_id for fav in user.favorites]
-    if not all(ex_id in valid_exercise_ids for ex_id in exercise_ids):
-        return jsonify({'error': 'One or more exercises are not in favorites'}), 400
-
-    # Create workout routine
-    new_workout = UserWorkout(
-        plan_name=title,
-        description=description,
-        user_id=user.id
-    )
+    # ✅ Create the workout
+    new_workout = UserWorkout(plan_name=title, description=description, user_id=user.id)
     db.session.add(new_workout)
-    db.session.commit()
+    db.session.flush()  # Ensure the workout ID is available
 
+    # ✅ Add exercises to the workout
+    for ex_id in exercise_ids:
+        exercise = Exercise.query.get(ex_id)
+        if exercise:
+            new_workout.exercises.append(exercise)
+
+    db.session.commit()
     return jsonify({'message': 'Workout routine created', 'workout_id': new_workout.id}), 201
 
 @workout_bp.route('/workouts/<int:workout_id>', methods=['PATCH'])

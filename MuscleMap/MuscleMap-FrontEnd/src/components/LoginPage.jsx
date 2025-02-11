@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { login } from '../utils/fetchingUtils';
 
+
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -8,7 +9,7 @@ const LoginPage = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError(null); // Clear previous errors
+        setError(null);
 
         const [user, loginError] = await login(username, password);
 
@@ -18,31 +19,37 @@ const LoginPage = () => {
         }
 
         if (user) {
-            window.location.href = '/profile'; // Redirect to profile page
+            window.location.href = '/profile';
         }
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleLogin}>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Login</button>
-            </form>
+        <div className="auth-container">
+            <div className="auth-card">
+                <h1>Login</h1>
+                {error && <p className="error-message">{error}</p>}
+                <form onSubmit={handleLogin} className="auth-form">
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-auth">Login</button>
+                </form>
+            </div>
         </div>
     );
 };

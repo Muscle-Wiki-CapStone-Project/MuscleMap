@@ -29,36 +29,69 @@ const ProfilePage = () => {
     const handleDeleteWorkout = async (workoutId) => {
         const [response, error] = await deleteWorkout(workoutId);
         if (!error) {
-            setWorkouts(workouts.filter(workout => workout.id !== workoutId)); // ✅ Remove from UI
+            setWorkouts(workouts.filter(workout => workout.id !== workoutId));
         }
     };
 
     return (
-        <div>
-            <h1>Profile</h1>
+        <div className="profile-container">
+            <div className="profile-header">
+                <h1>Profile</h1>
+            </div>
             {user ? (
-                <div>
-                    <p><strong>Username:</strong> {user.username}</p>
-                    <p><strong>Gender:</strong> {user.gender}</p>
-                    <button onClick={logout}>Logout</button>
-                    <br />
-                    <button onClick={() => navigate('/create-workout')}>Create Workout Routine</button>
+                <div className="profile-content">
+                    <div className="user-info">
+                        <p><strong>Username:</strong> {user.username}</p>
+                        <p><strong>Gender:</strong> {user.gender}</p>
+                        <div className="profile-actions">
+                            <button className="btn btn-logout" onClick={logout}>Logout</button>
+                            <button className="btn btn-create" onClick={() => navigate('/create-workout')}>
+                                Create Workout Routine
+                            </button>
+                        </div>
+                    </div>
 
-
-                    <h2>Your Workouts</h2>
-                    {workouts.length === 0 ? <p>No workouts yet.</p> : (
-                        workouts.map((workout) => (
-                            <div key={workout.id} style={{ border: "1px solid gray", padding: "10px", margin: "10px 0" }}>
-                                <h3>{workout.title}</h3>
-                                <p>{workout.description}</p>
-                                <button onClick={() => navigate(`/edit-workout/${workout.id}`)}>Edit</button>
-                                <button onClick={() => handleDeleteWorkout(workout.id)}>Delete</button>
+                    <div className="workouts-section">
+                        <h2>Your Workouts</h2>
+                        {workouts.length === 0 ? (
+                            <p className="no-workouts">No workouts yet.</p>
+                        ) : (
+                            <div className="workouts-grid">
+                                {workouts.map((workout) => (
+                                    <div key={workout.id} className="workout-card">
+                                        <h3>{workout.title}</h3>
+                                        {workout.exercises.length > 0 ? (
+                                            <ul>
+                                                {workout.exercises.map((exercise, index) => (
+                                                    <li key={index}>{exercise}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p>No exercises selected.</p>
+                                        )}
+                                        <p>{workout.description}</p>
+                                        <div className="workout-actions">
+                                            <button
+                                                className="btn btn-edit"
+                                                onClick={() => navigate(`/edit-workout/${workout.id}`)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                className="btn btn-delete"
+                                                onClick={() => handleDeleteWorkout(workout.id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))
-                    )}
+                        )}
+                    </div>
                 </div>
             ) : (
-                <p>Loading profile...</p>
+                <div className="loading">Loading profile...</div>
             )}
         </div>
     );
