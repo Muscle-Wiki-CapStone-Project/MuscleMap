@@ -26,18 +26,42 @@ const EditWorkoutPage = () => {
     const handleUpdateWorkout = async () => {
         const [response, error] = await updateWorkout(workoutId, title, description);
         if (!error) {
-            navigate('/profile'); // ✅ Redirect back to profile
+            navigate('/profile');
         }
     };
 
     return (
-        <div>
-            <h1>Edit Workout Routine</h1>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Routine Title" />
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
-            <button onClick={handleUpdateWorkout}>Save Changes</button>
-            <br />
-            <button onClick={() => navigate('/profile')}>Cancel</button>
+        <div className="workout-page">
+            <div className="workout-container">
+                <h1 className="workout-title">Edit Workout Routine</h1>
+                <div className="workout-form">
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Routine Title"
+                            className="form-input"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Description"
+                            className="form-textarea"
+                        />
+                    </div>
+                    <div className="button-group">
+                        <button onClick={handleUpdateWorkout} className="btn btn-primary">
+                            Save Changes
+                        </button>
+                        <button onClick={() => navigate('/profile')} className="btn btn-secondary">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

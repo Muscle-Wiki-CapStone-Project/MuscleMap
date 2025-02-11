@@ -621,3 +621,389 @@ footer {
         font-size: 1.75rem;
     }
 }
+
+/*EXERCISE PAGE */
+
+/* Exercises Page Container */
+.exercises-page {
+    min-height: 100vh;
+    padding: 2rem;
+    background: #FEF2F2;
+}
+
+/* Page Title */
+.page-title {
+    color: #991B1B;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.muscle-name {
+    color: #B91C1C;
+    text-transform: capitalize;
+}
+
+/* Exercise Grid */
+.exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Exercise Card */
+.exercise-card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.exercise-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Exercise Name */
+.exercise-name {
+    color: #991B1B;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #FEF2F2;
+}
+
+/* Exercise Details */
+.exercise-details {
+    margin-bottom: 1.5rem;
+}
+
+.exercise-details p {
+    margin: 0.5rem 0;
+    color: #4B5563;
+}
+
+/* Labels */
+.label {
+    color: #991B1B;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+/* Instructions */
+.exercise-instructions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid #FEF2F2;
+}
+
+.exercise-instructions p {
+    margin-top: 0.5rem;
+    color: #4B5563;
+    line-height: 1.6;
+}
+
+/* Favorite Button */
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    transition: transform 0.3s ease;
+    padding: 0.5rem;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.2);
+}
+
+.favorite-btn.favorited {
+    animation: pulse 0.3s ease;
+}
+
+/* Loading State */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    color: #991B1B;
+}
+
+/* Error Container */
+.error-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.error-container h1 {
+    color: #DC2626;
+    margin-bottom: 1rem;
+}
+
+.error-container p {
+    color: #4B5563;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .exercises-page {
+        padding: 1rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .exercise-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .exercise-card {
+        padding: 1rem;
+    }
+
+    .exercise-name {
+        font-size: 1.25rem;
+        padding-right: 3rem;
+    }
+}
+
+/*CREATE AND EDIT WORKOUT ROUTINE*/
+
+/* Workout Pages Container */
+.workout-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #991B1B, #B91C1C);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.workout-container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Title Styles */
+.workout-title {
+    color: #991B1B;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+/* Form Styles */
+.workout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input,
+.form-textarea {
+    padding: 0.75rem 1rem;
+    border: 2px solid #FEF2F2;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    width: 100%;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #991B1B;
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Exercise Selection */
+.exercise-selection {
+    margin-top: 1rem;
+}
+
+.section-title {
+    color: #991B1B;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.exercise-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #FEF2F2;
+    border-radius: 0.5rem;
+}
+
+.exercise-item {
+    padding: 0.5rem;
+}
+
+/* Custom Checkbox */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: background-color 0.3s ease;
+    border-radius: 0.25rem;
+}
+
+.checkbox-label:hover {
+    background-color: #FEE2E2;
+}
+
+.checkbox-input {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #991B1B;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.checkbox-input:checked+.checkbox-custom {
+    background-color: #991B1B;
+}
+
+.checkbox-input:checked+.checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.exercise-name {
+    color: #4B5563;
+    font-size: 1rem;
+}
+
+/* Button Styles */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #991B1B;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #B91C1C;
+}
+
+.btn-secondary {
+    background-color: #FEF2F2;
+    color: #991B1B;
+    border: 2px solid #991B1B;
+}
+
+.btn-secondary:hover {
+    background-color: #FEE2E2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .workout-page {
+        padding: 1rem;
+    }
+
+    .workout-container {
+        padding: 1.5rem;
+    }
+
+    .workout-title {
+        font-size: 2rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .exercise-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .workout-container {
+        padding: 1rem;
+    }
+
+    .form-input,
+    .form-textarea {
+        font-size: 0.9rem;
+    }
+}
