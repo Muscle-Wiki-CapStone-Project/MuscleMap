@@ -169,7 +169,6 @@ export const getFavorites = async () => {
 
 export const getWorkouts = async () => {
     const sessionId = Cookies.get("session_id");
-    console.log("Session ID being sent in GET /api/workouts:", sessionId);  // 🔥 Debugging line
 
     if (!sessionId) {
         console.error("No session ID found. User is not logged in.");
@@ -178,13 +177,14 @@ export const getWorkouts = async () => {
 
     return fetchHandler("/api/workouts", {
         method: "GET",
-        credentials: "include", // ✅ Ensures cookies are sent
+        credentials: "include",
         headers: {
-            "Authorization": `Bearer ${sessionId}`,  // ✅ Send session_id in headers
+            "Authorization": `Bearer ${sessionId}`,
             "Content-Type": "application/json"
         }
     });
 };
+
 
 // 🔥 Create a Workout Routine (Debugging Added)
 export const createWorkout = async (title, exerciseIds, description) => {

@@ -73,22 +73,23 @@ class UserFavorite(db.Model):
 
 
 # UserWorkout Table
-class UserWorkout(db.Model):
-    
-    # Represents a user's workout plan (push day, pull day)
+workout_exercise = db.Table(
+    'workout_exercise',
+    db.Column('workout_id', db.Integer, db.ForeignKey('user_workouts.id'), primary_key=True),  
+    db.Column('exercise_id', db.Integer, db.ForeignKey('exercises.id'), primary_key=True)  
+)
 
+
+class UserWorkout(db.Model):
     __tablename__ = 'user_workouts'
 
     id = db.Column(db.Integer, primary_key=True)
     plan_name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    description = db.Column(db.String(255), nullable=True)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
 
-    # Foreign Keys
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-    # Relationships
-    details = db.relationship('WorkoutPlanDetail', backref='workout_plan', lazy=True)  # Relationship with WorkoutPlanDetail
+    exercises = db.relationship('Exercise', secondary=workout_exercise, backref=db.backref('workouts', lazy=True))
 
 
 # WorkoutPlanDetail Table

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { fetchProfile, logout, getWorkouts, deleteWorkout } from '../utils/fetchingUtils';
 import { useNavigate } from 'react-router-dom';
 
-
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const [workouts, setWorkouts] = useState([]);
@@ -61,6 +60,15 @@ const ProfilePage = () => {
                                 {workouts.map((workout) => (
                                     <div key={workout.id} className="workout-card">
                                         <h3>{workout.title}</h3>
+                                        {workout.exercises.length > 0 ? (
+                                            <ul>
+                                                {workout.exercises.map((exercise, index) => (
+                                                    <li key={index}>{exercise}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p>No exercises selected.</p>
+                                        )}
                                         <p>{workout.description}</p>
                                         <div className="workout-actions">
                                             <button
