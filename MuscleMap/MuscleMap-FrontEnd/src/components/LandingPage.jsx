@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
-import "../styles.css";  // ✅ Import the styles
+import "../styles.css";
 import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
