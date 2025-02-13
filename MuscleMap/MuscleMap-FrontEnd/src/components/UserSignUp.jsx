@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getPostOptions, fetchHandler } from '../utils/fetchingUtils';
-
+import { useNavigate } from 'react-router-dom';
 
 const UserSignUp = () => {
     const [username, setUsername] = useState('');
@@ -8,6 +8,8 @@ const UserSignUp = () => {
     const [gender, setGender] = useState('Male');
     const [error, setError] = useState(null);
     const [message, setMessage] = useState('');
+
+    const navigate = useNavigate(); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,6 +21,11 @@ const UserSignUp = () => {
             setError('An error occurred during registration.');
         } else {
             setMessage(data.message);
+
+    
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000); 
         }
     };
 
