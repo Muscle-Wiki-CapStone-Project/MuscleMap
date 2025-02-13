@@ -4,7 +4,7 @@ from app.initialization import db
 
 workout_bp = Blueprint('workout_bp', __name__)
 
-# ✅ Handle both GET (fetch workouts) and POST (create workout)
+# Handle both GET (fetch workouts) and POST (create workout)
 @workout_bp.route('/workouts', methods=['GET', 'POST'])
 def workouts():
     if request.method == "GET":
@@ -13,7 +13,7 @@ def workouts():
         return create_workout()
     return jsonify({'error': 'Method not allowed'}), 405  # Fallback
 
-# ✅ Fetch User Workouts with Exercises
+#  Fetch User Workouts with Exercises
 @workout_bp.route('/workouts', methods=['GET'])
 def get_workouts():
     session_id = request.cookies.get("session_id")
@@ -43,7 +43,7 @@ def get_workouts():
 
 
 
-# ✅ Create a Workout Routine
+#  Create a Workout Routine
 @workout_bp.route('/workouts', methods=['POST'])
 def create_workout():
     session_id = request.cookies.get("session_id")
@@ -67,12 +67,12 @@ def create_workout():
     if not title or not exercise_ids:
         return jsonify({'error': 'Title and at least one exercise are required'}), 400
 
-    # ✅ Create the workout
+    # Create the workout
     new_workout = UserWorkout(plan_name=title, description=description, user_id=user.id)
     db.session.add(new_workout)
     db.session.flush()  # Ensure the workout ID is available
 
-    # ✅ Add exercises to the workout
+    # Add exercises to the workout
     for ex_id in exercise_ids:
         exercise = Exercise.query.get(ex_id)
         if exercise:

@@ -20,7 +20,7 @@ def profile():
     return jsonify({'username': user.username, 'gender': user.gender})
 
 
-# ⭐ Add Exercise to Favorites (Manual Session Handling)
+#Add Exercise to Favorites (Manual Session Handling)
 @user_bp.route('/favorites', methods=['POST'])
 def add_favorite():
     data = request.json
@@ -51,7 +51,7 @@ def add_favorite():
     return jsonify({'message': 'Exercise added to favorites'}), 201
 
 
-# ❌ Remove Exercise from Favorites (Manual Session Handling)
+# Remove Exercise from Favorites (Manual Session Handling)
 @user_bp.route('/favorites/<int:exercise_id>', methods=['DELETE'])
 def remove_favorite(exercise_id):
     data = request.json

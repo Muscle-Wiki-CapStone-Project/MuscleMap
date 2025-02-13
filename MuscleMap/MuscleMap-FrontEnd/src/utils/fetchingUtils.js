@@ -32,7 +32,7 @@ export const fetchHandler = async (url, options = {}) => {
         console.log(`Fetching from: ${BACKEND_URL}${url}`);
         const response = await fetch(`${BACKEND_URL}${url}`, {
             ...options,
-            credentials: 'include', // 🔥 Ensures cookies are sent with requests
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 ...(options.headers || {}),
@@ -49,7 +49,7 @@ export const fetchHandler = async (url, options = {}) => {
     }
 };
 
-// 🔥 Authentication Functions
+
 
 // Signup Function
 export const signup = async (username, password, gender) => {
@@ -123,7 +123,7 @@ export const fetchAndStoreExercises = async (muscle) => {
     return [data, error];
 };
 
-// 🔥 Add Exercise to Favorites (Include Session ID)
+
 export const addFavorite = async (exerciseId) => {
     const sessionId = Cookies.get('session_id');
     if (!sessionId) {
@@ -134,7 +134,7 @@ export const addFavorite = async (exerciseId) => {
     return fetchHandler('/api/favorites', getPostOptions({ session_id: sessionId, exercise_id: exerciseId }));
 };
 
-// ❌ Remove Exercise from Favorites (Include Session ID)
+
 export const removeFavorite = async (exerciseId) => {
     const sessionId = Cookies.get('session_id');
     if (!sessionId) {
@@ -152,7 +152,7 @@ export const removeFavorite = async (exerciseId) => {
 
 // Fetch User's Favorite Exercises (Now Uses `session_id`)
 export const getFavorites = async () => {
-    const sessionId = Cookies.get("session_id"); // 🔥 Get dynamically from cookies
+    const sessionId = Cookies.get("session_id");
     if (!sessionId) {
         console.error("No session ID found. User is not logged in.");
         return [null, new Error("User not logged in")];
@@ -161,7 +161,7 @@ export const getFavorites = async () => {
     return fetchHandler("/api/favorites", {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${sessionId}`,  // 🔥 Send the correct session ID dynamically
+            "Authorization": `Bearer ${sessionId}`,
             "Content-Type": "application/json"
         }
     });
@@ -186,10 +186,10 @@ export const getWorkouts = async () => {
 };
 
 
-// 🔥 Create a Workout Routine (Debugging Added)
+//  Create a Workout Routine (Debugging Added)
 export const createWorkout = async (title, exerciseIds, description) => {
     const sessionId = Cookies.get("session_id");
-    console.log("Session ID being sent in POST /api/workouts:", sessionId);  // 🔥 Debugging line
+    console.log("Session ID being sent in POST /api/workouts:", sessionId);  // Debugging line
 
     if (!sessionId) {
         console.error("No session ID found. User is not logged in.");
@@ -198,9 +198,9 @@ export const createWorkout = async (title, exerciseIds, description) => {
 
     return fetchHandler("/api/workouts", {
         method: "POST",
-        credentials: "include", // ✅ Ensures cookies are sent
+        credentials: "include", // Ensures cookies are sent
         headers: {
-            "Authorization": `Bearer ${sessionId}`,  // ✅ Send session_id in headers
+            "Authorization": `Bearer ${sessionId}`,  // Send session_id in headers
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -212,7 +212,6 @@ export const createWorkout = async (title, exerciseIds, description) => {
 };
 
 
-// 🔥 Update a Workout Routine
 export const updateWorkout = async (workoutId, title, description) => {
     const sessionId = Cookies.get("session_id");
 
@@ -233,7 +232,7 @@ export const updateWorkout = async (workoutId, title, description) => {
 };
 
 
-// 🔥 Delete a Workout Routine
+
 export const deleteWorkout = async (workoutId) => {
     const sessionId = Cookies.get("session_id");
 

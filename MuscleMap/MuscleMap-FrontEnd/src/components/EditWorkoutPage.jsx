@@ -19,21 +19,21 @@ const EditWorkoutPage = () => {
                 if (workout) {
                     setTitle(workout.title);
                     setDescription(workout.description);
-                    setSelectedExercises(workout.exercises.map(ex => ex.id)); // ✅ Load existing exercises
+                    setSelectedExercises(workout.exercises.map(ex => ex.id));
                 }
             }
         };
 
         const fetchFavorites = async () => {
             const [favData] = await getFavorites();
-            if (favData) setFavorites(favData.favorites); // ✅ Load available favorite exercises
+            if (favData) setFavorites(favData.favorites);
         };
 
         fetchWorkout();
         fetchFavorites();
     }, [workoutId]);
 
-    // ✅ Handle adding/removing exercises
+
     const toggleExercise = (exerciseId) => {
         setSelectedExercises((prev) =>
             prev.includes(exerciseId) ? prev.filter(id => id !== exerciseId) : [...prev, exerciseId]
@@ -43,7 +43,7 @@ const EditWorkoutPage = () => {
     const handleUpdateWorkout = async () => {
         const [response, error] = await updateWorkout(workoutId, title, description, selectedExercises);
         if (!error) {
-            navigate('/profile'); // ✅ Redirect to profile after updating
+            navigate('/profile');
         }
     };
 
